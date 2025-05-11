@@ -7,11 +7,11 @@ import Services.ProdutoService;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
+import java.util.Optional;
 
 @Path("/produto")
 public class ProdutoController {
@@ -20,14 +20,33 @@ public class ProdutoController {
     ProdutoService service;
 
     @POST
-    public ProdutoRequestDTO createProduct(final ProdutoRequestDTO request) {
-        ProdutoRequestDTO requestDTO = service.createProduct(request);
+    public ProdutoResponseDTO createProduct(final ProdutoRequestDTO request) {
+        ProdutoResponseDTO requestDTO = service.createProduct(request);
         return requestDTO;
     }
 
     @PUT
-    public ProdutoRequestDTO updateProduct(final ProdutoRequestDTO request) {
-        ProdutoRequestDTO requestDTO = service.updateProduct(request);
+    public ProdutoResponseDTO updateProduct(final ProdutoRequestDTO request) {
+        ProdutoResponseDTO requestDTO = service.updateProduct(request);
         return requestDTO;
+    }
+
+    @GET
+    @Path("/{id}")
+    public ProdutoResponseDTO findById(@PathParam("id") final Long id) {
+        ProdutoResponseDTO produto = service.findById(id);
+        return produto;
+    }
+
+    @GET
+    public List<ProdutoResponseDTO> findAll() {
+        return service.findAll();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteProduct(@PathParam("id") final Long id) {
+        service.deleteProduct(id);
+        return Response.noContent().build();
     }
 }
